@@ -113,6 +113,7 @@
 	docker-compose
 	mesa-demos
 	go
+	jdk
   ];
   virtualisation.docker.enable = true;
   # Some programs need SUID wrappers, can be configured further or are
