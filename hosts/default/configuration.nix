@@ -2,12 +2,13 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, inputs ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      inputs.home-manager.nixosModules.default;
     ];
   # USe latsest Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -31,7 +32,8 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_ZA.UTF-8";
-
+  # Enable flakes
+  nix.settings.experimental-features = ["nix-command" "flakes"];
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
   services.xserver.enable = true;
@@ -85,13 +87,21 @@
     ];
   };
 
+  home-manager = {
+    specialArgs = {inherit inputs; };
+
+    users ={
+      "muller" = import ./home.nix;
+    };
+  };
+
   # Install firefox.
   programs.firefox.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
   hardware.enableAllFirmware = true;
-  hardware.opengl.enable = true;
+  hardware.graphics.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -114,6 +124,14 @@
 	mesa-demos
 	go
 	jdk
+	vlc
+	openvpn
+	anki-bin
+	dnsutils
+	whois
+	inetutils
+	net-snmp
+	zsh
   ];
   virtualisation.docker.enable = true;
   # Some programs need SUID wrappers, can be configured further or are
