@@ -2,13 +2,13 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, inputs ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      inputs.home-manager.nixosModules.default;
+      inputs.home-manager.nixosModules.default
     ];
   # USe latsest Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -88,8 +88,6 @@
   };
 
   home-manager = {
-    specialArgs = {inherit inputs; };
-
     users ={
       "muller" = import ./home.nix;
     };
