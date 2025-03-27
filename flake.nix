@@ -1,8 +1,8 @@
 {
-  description = "Nixos config flake";
+  description = "NixOS config flake with Home Manager";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -11,21 +11,45 @@
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs: let
+    # Define your system architecture
     system = "x86_64-linux";
-    pkgs = import nixpkgs { inherit system; };
+
+    # Get the package set for this system
+    pkgs = import nixpkgs {
+      inherit system;
+      config = {
+        allowUnfree = true;
+        allowAliases = true;
+        };
+    };
   in {
-    nixosConfigurations.nixos = pkgs.lib.nixosSystem {
+    nixosConfigurations."nixos" = nixpkgs.lib.nixosSystem {
       system = system;
+
       modules = [
+        # Your main NixOS config
         ./hosts/default/configuration.nix
-        home-manager.nixosModules.default
+
+        # Enable Home Manager as a NixOS module
+        home-manager.nixosModules.home-manager
+
+        # Configure Home Manager integration
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+
+          home-manager.users.muller = import ./hosts/default/home.nix;
+
+          nixpkgs.pkgs = pkgs;
+#           nixpkgs.config.allowUnfree = true;
+        }
       ];
     };
 
-    homeConfigurations.muller = home-manager.lib.homeManagerConfiguration {
-      inherit system;
-      pkgs = pkgs;
-      configuration = import ./hosts/default/home.nix { inherit pkgs; };
-    };
+    # Optionally, standalone Home Manager config (if needed)
+    # homeConfigurations.muller = home-manager.lib.homeManagerConfiguration {
+    #   pkgs = pkgs;
+    #   modules = [ ./hosts/default/home.nix ];
+    # };
   };
 }

@@ -7,10 +7,7 @@
   home.homeDirectory = "/home/muller";
 
 
-  programs.neovim = {
-    enable = true;
-    viAlais = true;
-  };
+
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.
@@ -20,6 +17,16 @@
   # release notes.
   home.stateVersion = "24.11"; # Please read the comment before changing.
 
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+  };
+
+  home.file.".local/share.konsole/Default.profile".text = ''
+  [General]
+  Name=Default
+  Font= Overpass Nerd Font,10
+  '';
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = [

@@ -2,13 +2,12 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      inputs.home-manager.nixosModules.default
     ];
   # USe latsest Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -97,7 +96,7 @@
   programs.firefox.enable = true;
 
   # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+#   nixpkgs.config.allowUnfree = true;
   hardware.enableAllFirmware = true;
   hardware.graphics.enable = true;
 
