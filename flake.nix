@@ -10,15 +10,22 @@
     };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: {
-    # use "nixos", or your hostname as the name of the configuration
-    # it's a better practice than "default" shown in the video
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-      specialArgs = {inherit inputs;};
+  outputs = { self, nixpkgs, home-manager, ... }@inputs: let
+    system = "x86_64-linux";
+    pkgs = import nixpkgs { inherit system; };
+  in {
+    nixosConfigurations.nixos = pkgs.lib.nixosSystem {
+      system = system;
       modules = [
-        /hosts/default/configuration.nix
-        inputs.home-manager.nixosModules.default
+        ./hosts/default/configuration.nix
+        home-manager.nixosModules.default
       ];
+    };
+
+    homeConfigurations.muller = home-manager.lib.homeManagerConfiguration {
+      inherit system;
+      pkgs = pkgs;
+      configuration = import ./hosts/default/home.nix { inherit pkgs; };
     };
   };
 }

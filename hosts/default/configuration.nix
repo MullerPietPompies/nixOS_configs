@@ -129,7 +129,7 @@
 	whois
 	inetutils
 	net-snmp
-	zsh
+	tmux
   ];
   virtualisation.docker.enable = true;
   # Some programs need SUID wrappers, can be configured further or are
