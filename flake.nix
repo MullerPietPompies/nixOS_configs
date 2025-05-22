@@ -38,7 +38,10 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
 
+
           home-manager.users.muller = import ./hosts/default/home.nix;
+          home-manager.backupFileExtension = "backup";
+
 
           nixpkgs.pkgs = pkgs;
 #           nixpkgs.config.allowUnfree = true;
